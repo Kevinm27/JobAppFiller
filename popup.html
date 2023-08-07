@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Fill Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 300px;
+        }
+        #tabs {
+            display: flex;
+            justify-content: space-between;
+        }
+        .tab-content {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="tabs">
+    <button onclick="showTab('info')">Enter Info</button>
+    <button onclick="showTab('fill')">Auto-Fill</button>
+</div>
+
+<div id="info" class="tab-content active">
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <!-- Add other input fields as needed -->
+    <button onclick="saveInfo()">Save Info</button>
+</div>
+
+<div id="fill" class="tab-content">
+    <p>Click the button below to auto-fill the form on the current page.</p>
+    <button onclick="fillForm()">Auto-Fill Form</button>
+</div>
+
+<script>
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById(tabName).classList.add('active');
+    }
+
+    function saveInfo() {
+        // Save user info using the Chrome storage API or other methods
+    }
+
+    function fillForm() {
+        // Send a message to the background script to fill the form on the current page
+    }
+</script>
+
+</body>
+</html>
+
