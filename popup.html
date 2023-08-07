@@ -1,63 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<link rel="stylesheet" type="text/css" href="styles.css">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Fill Assistant</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            width: 300px;
-        }
-        #tabs {
-            display: flex;
-            justify-content: space-between;
-        }
-        .tab-content {
-            display: none;
-        }
-        .active {
-            display: block;
-        }
-    </style>
+  <title>Autofill Assistant</title>
 </head>
-
 <body>
+  <button id="viewData">View Saved Data</button>
+  <button id="enterData">Enter New Data</button>
+  <button id="fillForm">Fill Page</button>
 
-<div id="tabs">
-    <button onclick="showTab('info')">Enter Info</button>
-    <button onclick="showTab('fill')">Auto-Fill</button>
-</div>
-
-<div id="info" class="tab-content active">
+  <div id="newDataSection">
+    <h3>Enter Your Data:</h3>
     <input type="text" id="firstName" placeholder="First Name">
     <input type="text" id="lastName" placeholder="Last Name">
-    <!-- Add other input fields as needed -->
-    <button onclick="saveInfo()">Save Info</button>
-</div>
+    <input type="text" id="address" placeholder="Address">
+    <input type="text" id="city" placeholder="City">
+    <input type="text" id="state" placeholder="State">
+    <input type="text" id="postalCode" placeholder="Postal Code">
+    <input type="text" id="email" placeholder="Email">
+    <input type="text" id="phoneNumber" placeholder="Phone Number">
+    <button id="saveData">Save</button>
+  </div>
 
-<div id="fill" class="tab-content">
-    <p>Click the button below to auto-fill the form on the current page.</p>
-    <button onclick="fillForm()">Auto-Fill Form</button>
-</div>
+  <div id="savedDataSection" style="display:none;">
+    <h3>Your Saved Data:</h3>
+    <p>First Name: <span id="savedFirstName"></span></p>
+    <p>Last Name: <span id="savedLastName"></span></p>
+    <p>Address: <span id="savedAddress"></span></p>
+    <p>City: <span id="savedCity"></span></p>
+    <p>State: <span id="savedState"></span></p>
+    <p>Postal Code: <span id="savedPostalCode"></span></p>
+    <p>Email: <span id="savedEmail"></span></p>
+    <p>Phone Number: <span id="savedPhoneNumber"></span></p>
+    <button id="editData">Edit</button>
+  </div>
 
-<script>
-    function showTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        document.getElementById(tabName).classList.add('active');
-    }
-
-    function saveInfo() {
-        // Save user info using the Chrome storage API or other methods
-    }
-
-    function fillForm() {
-        // Send a message to the background script to fill the form on the current page
-    }
-</script>
-
+  <script src="popup.js"></script>
 </body>
 </html>
 

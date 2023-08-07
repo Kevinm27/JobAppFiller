@@ -13,7 +13,10 @@
       "16": "images/Logo16.png",
       "48": "images/Logo48.png",
       "128": "images/Logo128.png"
-    }
+     
+    },
+    "default_popup_width": 400,  
+    "default_popup_height": 500
   }
 }
 
