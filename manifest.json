@@ -3,10 +3,14 @@
   "name": "Autofill Assistant",
   "version": "1.0",
   "description": "Automatically fills out web forms.",
-  "permissions": ["activeTab", "storage"],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "permissions": ["activeTab", "storage", "tabs"],
+  "host_permissions":["<all_urls>"],
+  "content_scripts": [
+  	{
+  		"matches": ["<all_urls>"],
+  		"js": ["combined.js"]
+  	}
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
