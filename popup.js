@@ -17,7 +17,11 @@ document.getElementById('saveData').addEventListener('click', function() {
 document.getElementById('fillForm').addEventListener('click', function() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         let activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, {"message": "auto_fill_form"});
+        if(activeTab.status === "complete") {
+            chrome.tabs.sendMessage(activeTab.id, {"message": "auto_fill_form"});
+        } else {
+            console.warn("Tab is not fully loaded yet. Wait for a moment and try again.");
+        }
     });
 });
 

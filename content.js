@@ -6,45 +6,60 @@ chrome.storage.sync.get('userInfo', function(data) {
     }
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log("Message received in content.js:", request);
-    // ... the rest of your message handling code ...
-});
+function removeCommonListeners(element) {
+    const events = ["click", "focus", "blur", "input", "change"];
+    events.forEach(event => {
+        // We don't know the actual listener functions, so this is a blanket attempt to remove all listeners of a given type.
+        element.removeEventListener(event, () => {}, true);
+    });
+}
 
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log("Message received in content.js:", request);
+function tryAutoFill(data) {
+    const mappings = {
+        'firstName': ['firstName', 'first_name', 'userFirstName'],
+        'lastName': ['lastName', 'last_name', 'userLastName'],
+        'email': ['email', 'e-mail', 'userEmail'],
+        'city':['city', 'City'],
+        'state':['state', 'State'],
+        'postalCode':['postalCode', 'Postal Code', 'PostalCode', 'zip code', 'Zip Code', 'zipCode', 'Zip', 'zip'],
+        'phoneNumber': ['phoneNumber', 'Phone Number', 'PhoneNumber'],
+        'address':['address', 'Address']
+    };
 
-    if (request.message === "auto_fill_form") {
-        chrome.storage.sync.get('userInfo', function(data) {
-            if (data.userInfo) {
-                // Find form fields on the webpage and fill them
-                let inputFirstName = document.querySelector('input[name="firstName"]');
-                if (inputFirstName) inputFirstName.value = data.userInfo.firstName;
-
-                let inputLastName = document.querySelector('input[name="lastName"]');
-                if (inputLastName) inputLastName.value = data.userInfo.lastName;
-                
-                let inputAddress = document.querySelector('input[name="address"]');
-                if (inputAddress) inputAddress.value = data.userInfo.address;
-
-                // And so on for city, state, postalCode, email, phoneNumber...
-                let inputCity = document.querySelector('input[name="city"]');
-                if (inputCity) inputCity.value = data.userInfo.city;
-                
-                let inputState = document.querySelector('input[name="state"]');
-                if (inputState) inputState.value = data.userInfo.state;
-                
-                let inputPostalCode = document.querySelector('input[name="PostalCode"]');
-                if (inputPostalCode) inputPostalCode.value = data.userInfo.postalCode;
-                
-                let inputEmail = document.querySelector('input[name="email"]');
-                if (inputEmail) inputEmail.value = data.userInfo.email;
-                
-                let inputPhoneNumber = document.querySelector('input[name="phoneNumber"]');
-                if (inputPhoneNumber) inputPhoneNumber.value = data.userInfo.phoneNumber;
+    for (let key in mappings) {
+        if (data[key]) {
+            for (let name of mappings[key]) {
+                let inputField = document.querySelector(`input[name="${name}"]`);
+                if (inputField) {
+                    inputField.value = data[key];
+                    break; // We've found and set the value, move to next key
+                }
             }
-        });
+        }
     }
+}
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.message === "auto_fill_form") {
+	    chrome.storage.sync.get('userInfo', function(data) {
+		if (data.userInfo) {
+		    const fields = ['firstName', 'lastName', 'address', 'city', 'state', 'postalCode', 'email', 'phoneNumber'];
+		    
+		    fields.forEach(field => {
+		    	setTimeout(()=>{
+		 
+				let inputElement = document.querySelector(`input[name="${field}"]`);
+				
+				if (inputElement) {
+				    removeCommonListeners(inputElement);  // Call the utility function before setting value
+				    inputElement.value = data.userInfo[field] || '';
+				}
+		        }, 6000);
+		    });
+		}
+	    });
+	}
 });
+
 
