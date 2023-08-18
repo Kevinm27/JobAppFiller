@@ -1,3 +1,13 @@
+// Prevent the default drag and drop behavior for the entire document
+document.addEventListener('dragover', function(event) {
+    event.preventDefault();
+});
+
+document.addEventListener('drop', function(event) {
+    event.preventDefault();
+});
+
+
 document.getElementById('saveData').addEventListener('click', function() {
     const data = {
         firstName: document.getElementById('firstName').value,
@@ -22,6 +32,12 @@ document.getElementById('fillForm').addEventListener('click', function() {
         } else {
             console.warn("Tab is not fully loaded yet. Wait for a moment and try again.");
         }
+    });
+});
+
+document.getElementById('uploadFiles').addEventListener('click', function() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {type: "uploadFiles"});
     });
 });
 
@@ -50,6 +66,76 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.getElementById('cvInput').addEventListener('change', function() {
+    const cvFile = this.files[0];
+    if (cvFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const fileContent = event.target.result;
+            chrome.storage.sync.set({ 'savedCv': fileContent });
+        };
+        reader.readAsDataURL(cvFile);  // Reads the file content as Base64
+    }
+});
+
+document.getElementById('coverLetterInput').addEventListener('change', function() {
+    const coverLetterFile = this.files[0];
+    if (coverLetterFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const fileContent = event.target.result;
+            chrome.storage.sync.set({ 'savedCoverLetter': fileContent });
+        };
+        reader.readAsDataURL(coverLetterFile);  // Reads the file content as Base64
+    }
+});
+
+// Handle dragover event
+function handleDragOver(event) {
+    event.preventDefault();
+    event.currentTarget.style.backgroundColor = '#e0e0e0';  // Some feedback on drag over
+}
+
+// Handle drag leave event
+function handleDragLeave(event) {
+    event.currentTarget.style.backgroundColor = 'transparent';
+}
+
+// Function to read the dropped file
+function handleFileDrop(dropAreaId, storageKey) {
+    const dropArea = document.getElementById(dropAreaId);
+
+    dropArea.addEventListener('drop', (event) => {
+        event.stopPropagation();  // Stop the event from propagating further
+        event.preventDefault();   // Prevent the default action
+        
+        // Retrieve the file
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            // Handle the file
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const fileContent = event.target.result;
+                chrome.storage.sync.set({ [storageKey]: fileContent });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        dropArea.style.backgroundColor = 'transparent';
+    });
+}
+
+
+// Now, setup the listeners for the two drop areas
+document.getElementById('cvDropArea').addEventListener('dragover', handleDragOver);
+document.getElementById('cvDropArea').addEventListener('dragleave', handleDragLeave);
+handleFileDrop('cvDropArea', 'savedCv');
+
+// Replicate for cover letter 
+document.getElementById('coverLetterDropArea').addEventListener('dragover', handleDragOver);
+document.getElementById('coverLetterDropArea').addEventListener('dragleave', handleDragLeave);
+handleFileDrop('coverLetterDropArea', 'savedCoverLetter');
 
 document.getElementById('viewData').addEventListener('click', function() {
     document.getElementById('newDataSection').style.display = 'none';

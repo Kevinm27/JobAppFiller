@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="styles.css">
+
 
 <head>
+  <link rel="stylesheet" type="text/css" href="styles.css">
   <title>Autofill Assistant</title>
 </head>
 <body>
@@ -20,6 +21,15 @@
     <input type="text" id="postalCode" placeholder="Postal Code">
     <input type="text" id="email" placeholder="Email">
     <input type="text" id="phoneNumber" placeholder="Phone Number">
+	<h4> Drop Resume Here </h4>
+	<div id="cvDropArea" class="drop-area">
+	    <p>Drag & Drop your Resume here</p>
+	</div>
+	<h4> Drop Cover Letter Here </h4>
+	<div id="coverLetterDropArea" class="drop-area">
+		<p>Drag & Drop your Cover Letter here</p>
+	</div>
+    <button id="uploadFiles">Upload</button>
     <button id="saveData">Save</button>
   </div>
 
@@ -33,6 +43,8 @@
     <p>Postal Code: <span id="savedPostalCode"></span></p>
     <p>Email: <span id="savedEmail"></span></p>
     <p>Phone Number: <span id="savedPhoneNumber"></span></p>
+    <p>Resume : <span id="savedCv"></span></p>
+    <p>Cover Letter : <span id="savedCoverLetter"></span></p>
     <button id="editData">Edit</button>
   </div>
 
